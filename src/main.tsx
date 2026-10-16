@@ -9,6 +9,9 @@ import { JokesProvider } from "./contexts/JokesContext.tsx";
 import { LanguageProvider } from "./contexts/LanguageContext.tsx";
 import { ToastContainer } from "react-toastify";
 import { ModerationProvider } from "./contexts/ModerationContext.tsx";
+import { registerServiceWorker } from "./registerServiceWorker.ts";
+
+registerServiceWorker();
 
 createRoot(document.getElementById("root")!).render(
   // <StrictMode>
