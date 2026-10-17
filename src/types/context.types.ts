@@ -11,17 +11,14 @@ export interface ColorThemeContextType {
 //--------------------------------------------
 export type UserRole = "USER" | "ADMIN";
 
-const BADGE = {
-  ADMIN: "ADMIN",
-  TOP_CREATOR_MONTH: "TOP_CREATOR_MONTH",
-  JOKE_OF_DAY: "JOKE_OF_DAY",
-  TRENDING_WEEK: "TRENDING_WEEK",
-  MOST_COMMENTED_WEEK: "MOST_COMMENTED_WEEK",
-  FASTEST_GROWING: "FASTEST_GROWING",
-  STREAK: "STREAK",
-} as const;
-
-export type BadgeKey = (typeof BADGE)[keyof typeof BADGE];
+export type BadgeKey =
+  | "ADMIN"
+  | "TOP_CREATOR_MONTH"
+  | "JOKE_OF_DAY"
+  | "TRENDING_WEEK"
+  | "MOST_COMMENTED_WEEK"
+  | "FASTEST_GROWING"
+  | "STREAK";
 
 export type Badge = {
   key: BadgeKey;

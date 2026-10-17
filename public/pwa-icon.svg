@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">PunDad app icon</title>
+  <desc id="desc">A PunDad monogram on a colorful square background.</desc>
+  <rect width="512" height="512" rx="96" fill="#2b2f52" />
+  <circle cx="376" cy="136" r="74" fill="#ffc430" />
+  <circle cx="140" cy="390" r="92" fill="#2aa9a1" />
+  <path
+    fill="#d9714a"
+    d="M102 158c0-38 30-68 68-68h96c82 0 145 58 145 133s-63 133-145 133h-58v66h-106V158Zm106 103h52c28 0 47-16 47-38s-19-38-47-38h-52v76Z"
+    opacity=".98"
+  />
+  <path
+    fill="#fff7df"
+    d="M108 150c0-38 30-68 68-68h92c82 0 145 58 145 133s-63 133-145 133h-54v74H108V150Zm106 103h50c28 0 47-16 47-38s-19-38-47-38h-50v76Z"
+  />
+  <path
+    fill="#2b2f52"
+    d="M320 357c28 0 51-8 70-23 7-5 16-4 21 3 5 6 4 16-3 21-24 19-54 29-88 29-33 0-63-10-87-29-7-5-8-15-3-21 5-7 15-8 21-3 19 15 42 23 69 23Z"
+  />
+</svg>

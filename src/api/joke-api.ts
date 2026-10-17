@@ -1,10 +1,6 @@
-//FOR PRODUCTION
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:4001/api/v1";
-const API_ORIGIN = import.meta.env.VITE_API_ORIGIN ?? "http://127.0.0.1:4001";
-
-//FOR DEV on live backend
-// const API_BASE_URL = "https://pundad.app/api/v1";
-// const API_ORIGIN = "https://pundad.app";
+// Vite proxies these paths in development; Nginx handles them after deployment.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
+const API_ORIGIN = import.meta.env.VITE_API_ORIGIN ?? "";
 
 const JOKE_API = {
   BASE: API_BASE_URL,

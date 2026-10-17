@@ -1,0 +1,56 @@
+{
+  "id": "/",
+  "name": "PunDad",
+  "short_name": "PunDad",
+  "description": "A community for dad jokes, puns, and groan-worthy humor.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#b8bad6",
+  "theme_color": "#2b2f52",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["entertainment", "social"],
+  "icons": [
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "853x937",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse jokes",
+      "short_name": "Jokes",
+      "description": "Open the latest jokes.",
+      "url": "/jokes",
+      "icons": [
+        {
+          "src": "/pwa-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Add a joke",
+      "short_name": "New joke",
+      "description": "Write a new joke.",
+      "url": "/dashboard/new-joke",
+      "icons": [
+        {
+          "src": "/pwa-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}

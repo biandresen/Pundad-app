@@ -20,11 +20,6 @@ const Drafts = () => {
   const { language, t, tf } = useLanguage();
   const [showMiniJokes, setShowMiniJokes] = useState(true);
 
-  // If the user is not authenticated, do not initialize pagination requests.
-  if (!accessToken) {
-    return <p className="text-center mt-10 text-[var(--text1)]">{t("drafts.authRequired")}</p>;
-  }
-
   // Stable pagination config values.
   const args = useMemo(() => [language], [language]);
   const resetKey = useMemo(() => `my-drafts:${language}`, [language]);
@@ -41,6 +36,7 @@ const Drafts = () => {
   } = usePagination<JokeType>(getCurrentUserDrafts, {
     accessToken,
     setAccessToken,
+    enabled: Boolean(accessToken),
     limit: LIMIT,
     args,
     mode: "infinite",
@@ -48,6 +44,11 @@ const Drafts = () => {
     rootMargin: "700px",
     resetKey,
   });
+
+  // Hooks always run in the same order. Pagination stays disabled while logged out.
+  if (!accessToken) {
+    return <p className="text-center mt-10 text-[var(--text1)]">{t("drafts.authRequired")}</p>;
+  }
 
   const handleTogglePresentation = () => {
     setShowMiniJokes((prev) => !prev);

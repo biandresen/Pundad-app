@@ -64,6 +64,7 @@ export const ModerationProvider = ({ children }: ModerationProviderProps) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components -- Context hooks share their provider module.
 export const useModeration = () => {
   const context = useContext(ModerationContext);
 

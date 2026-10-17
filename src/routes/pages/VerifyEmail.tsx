@@ -80,7 +80,7 @@ const VerifyEmail = () => {
 
   return (
     <div className="container py-8">
-      <div className="single-container max-w-100 mx-auto text-center">
+      <div className="single-container max-w-100 mx-auto text-center text-[var(--text1)]">
         <h1 className="text-2xl font-bold mb-4">{t("verifyEmail.heading")}</h1>
 
         {loading && <p>{t("common.loading")}</p>}
