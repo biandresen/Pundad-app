@@ -38,8 +38,7 @@ production API.
 
 ## Continuous integration
 
-CI workflows for lint, tests, migration checks, and build artifacts are prepared
-and verified locally. Publishing and branch protection still require GitHub
-authentication/settings. See
+CI workflows for lint, tests, migration checks, and build artifacts are published
+in pull requests, and their first GitHub runs passed. See
 [the CI guide](continuous-integration.md) for the workflows, local commands,
 branch protection settings, and the public staging plan.
