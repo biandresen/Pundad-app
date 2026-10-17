@@ -41,12 +41,14 @@ production API.
 
 CI workflows are merged and the required checks protect `main`. See
 [the CI guide](continuous-integration.md) for workflow details, local commands,
-and branch protection. GitHub Actions currently checks/builds; it does not deploy.
+and branch protection. The Pi retrieves successful CI artifacts and deploys them; see
+[automatic deployment](automatic-deployment.md) for policy and operation.
 
 ## Staging runtime
 
 The public staging site is live at https://staging.pundad.app. See
 [the complete staging runbook](staging.md) for architecture, reproduction,
 tunnel/DNS setup, CI artifact selection, manual deployment, verification,
-rollback, and troubleshooting. Automatic PR deployment and production
-deployment after merge remain pending.
+rollback, and troubleshooting. Continue with [automatic deployment](automatic-deployment.md)
+for the trusted PR-to-staging and successful-main-to-production controller,
+backup/restore procedures, and operation.
