@@ -24,7 +24,7 @@ export const useAuthInitializer = () => {
         // Canonical: fetch user from DB
         const meRes = await safeRequest(getMe, token, setAccessToken);
         setUser(meRes.data);
-      } catch (err) {
+      } catch {
         setIsAuthenticated(false);
         setUser(null);
       } finally {

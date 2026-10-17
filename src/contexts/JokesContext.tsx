@@ -56,6 +56,7 @@ export const JokesProvider = ({ children }: { children: React.ReactNode }) => {
   return <JokesContext.Provider value={value}>{children}</JokesContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components -- Context hooks share their provider module.
 export const useJokes = () => {
   const context = useContext(JokesContext);
   if (!context) throw new Error("useJokes must be used within a JokesProvider");
