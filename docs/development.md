@@ -1,8 +1,9 @@
 # Local frontend development on the Pi
 
 Use `/home/pi/projects/frontend/pundad-app-dev` for development. This Git
-worktree has its own `chore/development-workflow` branch and does not change
-the deployed files under `/var/www/pundad-frontend`.
+worktree was initially created on `chore/development-workflow`. After the baseline
+CI PR was merged, the same directory moved to `chore/staging-runtime`. Editing
+here does not change deployed files under `/var/www/pundad-frontend`.
 
 ```bash
 cd /home/pi/projects/frontend/pundad-app-dev
@@ -38,12 +39,14 @@ production API.
 
 ## Continuous integration
 
-CI workflows for lint, tests, migration checks, and build artifacts are published
-in pull requests, and their first GitHub runs passed. See
-[the CI guide](continuous-integration.md) for the workflows, local commands,
-branch protection settings, and the public staging plan.
+CI workflows are merged and the required checks protect `main`. See
+[the CI guide](continuous-integration.md) for workflow details, local commands,
+and branch protection. GitHub Actions currently checks/builds; it does not deploy.
 
 ## Staging runtime
 
-The next environment is the public staging site. See [the staging guide](staging.md)
-for accounts, services, private email capture, manual deployments, and inspection.
+The public staging site is live at https://staging.pundad.app. See
+[the complete staging runbook](staging.md) for architecture, reproduction,
+tunnel/DNS setup, CI artifact selection, manual deployment, verification,
+rollback, and troubleshooting. Automatic PR deployment and production
+deployment after merge remain pending.
