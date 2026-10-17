@@ -27,6 +27,11 @@ const Layout = ({ setSidebars, children }: LayoutProps) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--bg)]">
+      {window.location.hostname === "staging.pundad.app" && (
+        <div role="note" className="bg-[var(--warning)] text-[var(--text0)] text-center px-4 py-2 font-semibold">
+          Staging · Test site. Data may be reset.
+        </div>
+      )}
       <Header setSidebars={setSidebars} />
 
       <LanguageRouteGate>
