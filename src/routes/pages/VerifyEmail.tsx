@@ -63,7 +63,7 @@ const VerifyEmail = () => {
         }
 
         setVerified(true);
-        toast.success(res.message || t("verifyEmail.success"));
+        toast.success(t("verifyEmail.success"));
       } catch (err: any) {
         const message = getApiErrorMessage(err, t("verifyEmail.failed"));
         setErrorMessage(message);

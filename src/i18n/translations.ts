@@ -441,7 +441,7 @@ Page URL:
 
     verifyEmail: {
       heading: "Verify email",
-      success: "Your email has been verified successfully.",
+      success: "Your email has been verified. Your account is now ready to use.",
       goToLogin: "Go to login",
       goToProfile: "Go to profile",
       resend: "Send new verification email",
@@ -1784,7 +1784,7 @@ Side-URL:
 
     verifyEmail: {
       heading: "Bekreft e-post",
-      success: "E-posten din er bekreftet.",
+      success: "E-posten din er bekreftet. Kontoen din er nå klar til bruk.",
       goToLogin: "Gå til innlogging",
       goToProfile: "Gå til profil",
       resend: "Send ny verifiseringsmail",
