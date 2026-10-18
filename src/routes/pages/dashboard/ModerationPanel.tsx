@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import Input from "../../../components/atoms/Input";
@@ -69,7 +69,7 @@ const ModerationPanel = () => {
     return match?.message ?? null;
   };
 
-  const loadAll = async () => {
+  const loadAll = useCallback(async () => {
     if (!accessToken) return;
 
     try {
@@ -89,15 +89,15 @@ const ModerationPanel = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [accessToken, setAccessToken, t]);
 
-    const refreshAdminAndPublicTerms = async () => {
+  const refreshAdminAndPublicTerms = useCallback(async () => {
     await Promise.all([loadAll(), reloadTerms()]);
-  };
+  }, [loadAll, reloadTerms]);
 
   useEffect(() => {
     void refreshAdminAndPublicTerms();
-  }, [accessToken]);
+  }, [refreshAdminAndPublicTerms]);
 
   const filteredTerms = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();

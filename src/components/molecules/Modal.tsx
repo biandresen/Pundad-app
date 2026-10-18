@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useCallback, useEffect, type ReactNode } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 type ModalVariant = "confirm" | "info" | "custom";
@@ -41,7 +41,10 @@ const Modal = ({
 }: ModalProps) => {
   const { t } = useLanguage();
 
-  const close = onClose ?? onCancel ?? (() => {});
+  const close = useCallback(() => {
+    const handler = onClose ?? onCancel;
+    handler?.();
+  }, [onClose, onCancel]);
   const resolvedConfirmText = confirmText ?? t("modal.confirm");
   const resolvedCancelText = cancelText ?? t("modal.cancel");
   const resolvedCloseText = t("modal.close");

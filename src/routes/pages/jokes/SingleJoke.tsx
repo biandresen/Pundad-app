@@ -94,7 +94,7 @@ const SingleJoke = () => {
     return () => {
       cancelled = true;
     };
-  }, [jokeId, parsedJokeId, language, contextJoke, t]);
+  }, [jokeId, parsedJokeId, language, contextJoke, t, accessToken]);
 
   const joke = localJoke;
 
