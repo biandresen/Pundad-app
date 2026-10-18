@@ -120,6 +120,7 @@ export const translations = {
       },
       password: {
         length: "Password must be at least 8 characters long",
+        lowercase: "Password must contain a lowercase letter",
         uppercase: "Password must contain an uppercase letter",
         number: "Password must contain a number",
         symbol: "Password must contain a symbol",
@@ -1462,6 +1463,7 @@ Page URL:
       },
       password: {
         length: "Passord må være minst 8 tegn langt",
+        lowercase: "Passord må inneholde en liten bokstav",
         uppercase: "Passord må inneholde en stor bokstav",
         number: "Passord må inneholde et tall",
         symbol: "Passord må inneholde et symbol",
