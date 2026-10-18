@@ -47,7 +47,7 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
         </li>
 
         {user ?
-          <li>
+          <li className="whitespace-nowrap">
             <NavLink to="/dashboard" onClick={closeMobileNav} className={navClass}>
               {t("navbar.links.dashboard")}
             </NavLink>
