@@ -11,6 +11,11 @@ The project is built as a JAMstack-style application with separate frontend and 
 
 Live app: https://pundad.app
 
+Development, staging, production, email verification, deployment, and recovery:
+[the single master guide](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md). It explains the reusable approach first,
+then the practical PunDad setup. The editable file on this Pi is
+`/home/pi/projects/backend/pundad-api-dev/docs/development-deployment-guide.md`.
+
 API documentation: https://documenter.getpostman.com/view/44451419/2sBXwqsAym
 
 ## Project Purpose
@@ -214,87 +219,19 @@ pundad-api/
     validation/       Express Validator rules
 ```
 
-## Local Development
+## Development and deployment
 
-Run the frontend and backend in separate terminals.
+Use the [master guide](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md) for the current instructions:
 
-### Backend
+- [Daily editing, laptop preview, checks, and PRs](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md#10-everyday-development-and-prs)
+- [Development console email and staging captured email](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md#11-email-and-account-verification)
+- [Automatic PR staging and main production releases](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md#14-automatic-deployment-policy)
+- [Managed API/worker services, logs, and troubleshooting](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md#18-inspection-and-troubleshooting)
+- [Backups, pausing automation, and rollback](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md#19-backups-and-restore-rehearsal)
 
-From the backend repository:
-
-```bash
-npm install
-npx prisma migrate dev
-npm run dev
-```
-
-Optional worker process for scheduled feature computations:
-
-```bash
-npm run dev:worker
-```
-
-Backend development server:
-
-```text
-http://127.0.0.1:4001/api/v1
-```
-
-Required backend environment variables:
-
-```text
-DATABASE_URL
-JWT_ACCESS_SECRET
-JWT_REFRESH_SECRET
-RESEND_API_KEY
-EMAIL_FROM
-EMAIL_REPLY_TO
-CONTACT_ADMIN_EMAIL
-CONTACT_BUG_EMAIL
-CONTACT_FEATURE_EMAIL
-CONTACT_SUGGESTION_EMAIL
-CONTACT_FEEDBACK_EMAIL
-```
-
-### Frontend
-
-From this frontend repository:
-
-```bash
-npm install
-npm run dev
-```
-
-Frontend development server:
-
-```text
-http://127.0.0.1:5173
-```
-
-Frontend environment variables:
-
-```text
-VITE_API_BASE_URL=http://127.0.0.1:4001/api/v1
-VITE_API_ORIGIN=http://127.0.0.1:4001
-```
-
-## Available Frontend Scripts
-
-```bash
-npm run dev
-npm run build
-npm run lint
-npm run preview
-```
-
-## Backend Processes
-
-The backend PM2 ecosystem defines two production processes:
-
-- `pundad-api`: Express HTTP API
-- `pundad-worker`: scheduled background jobs for featured rankings
-
-The API handles user requests. The worker computes daily jokes, weekly rankings, fastest-growing jokes, top creators, and related badge awards for each supported language.
+This README describes the product. Setup commands and operating procedures are
+maintained only in the master guide. Frontend/backend feature branches use the
+existing `-dev` worktrees; deployed services run installed release snapshots.
 
 ## Security Highlights
 
@@ -333,7 +270,7 @@ The API handles user requests. The worker computes daily jokes, weekly rankings,
 
 ## Future Improvements
 
-- Automated backend integration tests
+- Expanded backend integration coverage
 - Frontend component and route tests
 - End-to-end tests for auth, language separation, joke CRUD, and admin flows
 - Redis cache for high-read ranking data

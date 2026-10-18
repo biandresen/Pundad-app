@@ -479,33 +479,11 @@ Important security decisions:
 
 ## 20. Deployment Model
 
-Frontend:
-
-- Built with Vite
-- Deployed as static files
-- Served by Nginx
-
-Backend:
-
-- Runs as `pundad-api` PM2 process
-- Listens on localhost in production
-- Receives proxied API traffic from Nginx
-
-Worker:
-
-- Runs as `pundad-worker` PM2 process
-- Starts the scheduler
-- Computes featured rankings for both languages
-
-Database:
-
-- PostgreSQL
-- Schema managed with Prisma migrations
-
-Edge/proxy:
-
-- Cloudflare handles DNS/TLS/protection.
-- Nginx serves static files, proxies API traffic, and exposes uploaded avatars.
+The [single development and deployment master guide](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md)
+is authoritative for dev/staging/production environments, current release paths,
+managed API/worker processes, Cloudflare/Nginx routing, CI/deployment policy,
+and backup/recovery procedures. It introduces generic concepts before the
+practical PunDad example. Avoid duplicating those operating instructions here.
 
 ## 21. Important Tradeoffs
 

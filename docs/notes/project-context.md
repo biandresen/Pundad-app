@@ -6,7 +6,7 @@ Tech stack:
 - Backend: Node.js + Express
 - Database: PostgreSQL + Prisma
 - Auth: access token + refresh token flow
-- Deployment: Railway/backend already in use, production-style setup
+- Deployment: Raspberry Pi, Cloudflare, Nginx, and systemd-managed PM2 release runtimes; see [the master guide](https://github.com/biandresen/Pundad-api/blob/main/docs/development-deployment-guide.md)
 - UI includes sidebars, header/navbar, profile/dashboard, joke pages, featured pages, legal pages
 
 Core app concept:
