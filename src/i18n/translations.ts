@@ -311,6 +311,10 @@ Page URL:
       verifyEmail: "Please verify your email to continue.",
       registrationFailed: "Registration failed",
       highlightedErrors: "Correct the highlighted errors and try again.",
+      securityCheck: "Security check",
+      securityUnavailable: "The security check is unavailable. Please try again later.",
+      securityFailed: "The security check failed or expired. Please try again.",
+      retrySecurity: "Retry security check",
       success: "Welcome, {{username}}!",
 
       infoHeading: "Create your account",
@@ -1654,6 +1658,10 @@ Side-URL:
       verifyEmail: "Bekreft e-posten din for å fortsette.",
       registrationFailed: "Registrering mislyktes",
       highlightedErrors: "Rett opp de markerte feilene og prøv igjen.",
+      securityCheck: "Sikkerhetssjekk",
+      securityUnavailable: "Sikkerhetssjekken er utilgjengelig. Prøv igjen senere.",
+      securityFailed: "Sikkerhetssjekken mislyktes eller er utløpt. Prøv igjen.",
+      retrySecurity: "Prøv sikkerhetssjekken på nytt",
       success: "Velkommen, {{username}}!",
 
       infoHeading: "Opprett kontoen din",

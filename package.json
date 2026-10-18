@@ -12,6 +12,7 @@
     "lint:prune": "eslint . --prune-suppressions"
   },
   "dependencies": {
+    "@marsidev/react-turnstile": "^1.6.2",
     "axios": "^1.11.0",
     "clsx": "^2.1.1",
     "react": "^19.1.0",

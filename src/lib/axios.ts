@@ -14,6 +14,7 @@ type RegisterUser = {
   password: string;
   passwordConfirmation: string;
   acceptedTerms: boolean;
+  turnstileToken: string;
 };
 
 type LoginUser = {
@@ -123,6 +124,7 @@ export const registerUser = async ({
   password,
   passwordConfirmation,
   acceptedTerms,
+  turnstileToken,
 }: RegisterUser) => {
   try {
     const res = await axios.post(JOKE_API.BASE + JOKE_API.REGISTER, {
@@ -131,6 +133,7 @@ export const registerUser = async ({
       password,
       passwordConfirmation,
       acceptedTerms,
+      turnstileToken,
     });
     return res.data;
   } catch (err: any) {
