@@ -74,6 +74,11 @@
       "count": 1
     }
   },
+  "src/routes/pages/Register.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
   "src/routes/pages/ResendVerification.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1

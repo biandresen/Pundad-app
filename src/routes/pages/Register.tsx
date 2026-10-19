@@ -8,7 +8,6 @@ import { useModeration } from "../../contexts/ModerationContext";
 
 import Input from "../../components/atoms/Input";
 import Button from "../../components/atoms/Button";
-import RegistrationTurnstile from "../../components/molecules/RegistrationTurnstile";
 
 import {
   usernameValidator,
@@ -19,7 +18,6 @@ import {
 import { registerUser } from "../../lib/axios";
 import { toastApiError } from "../../lib/apiErrors";
 import { moderateFields } from "../../lib/moderation";
-import type { NormalizedApiError } from "../../lib/normalizeApiError";
 
 type BackendFieldError = {
   field: string;
@@ -86,8 +84,6 @@ const Register = () => {
   // Prevent duplicate submissions while the API request is in flight
   // --------------------------------------------------
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState("");
-  const [turnstileAttempt, setTurnstileAttempt] = useState(0);
 
   // --------------------------------------------------
   // Derived state
@@ -101,8 +97,7 @@ const Register = () => {
     !email ||
     !password ||
     !passwordConfirmation ||
-    !acceptedTerms ||
-    !turnstileToken;
+    !acceptedTerms;
 
   // --------------------------------------------------
   // Apply backend validation errors to specific fields
@@ -179,7 +174,6 @@ const Register = () => {
       password,
       passwordConfirmation,
       acceptedTerms,
-      turnstileToken,
     });
 
       if (res.statusCode !== 201) {
@@ -196,12 +190,7 @@ const Register = () => {
 
       toast.success(t("register.verifyEmail"));
       navigate(`/resend-verification?email=${encodeURIComponent(registeredEmail)}`);
-    } catch (error: unknown) {
-      const err = error as NormalizedApiError;
-      if (err.code === "TURNSTILE_FAILED" || err.code === "TURNSTILE_UNAVAILABLE") {
-        toast.error(t(err.code === "TURNSTILE_FAILED" ? "register.securityFailed" : "register.securityUnavailable"));
-        return;
-      }
+    } catch (err: any) {
       const backendErrors = err?.response?.data?.errors;
 
       // If backend returned structured field validation errors,
@@ -215,9 +204,6 @@ const Register = () => {
       // All other API failures go through the centralized toast helper
       toastApiError(err, t("register.registrationFailed"));
     } finally {
-      // Tokens are single-use, including when another registration check fails.
-      setTurnstileToken("");
-      setTurnstileAttempt((value) => value + 1);
       setIsSubmitting(false);
     }
   };
@@ -243,7 +229,7 @@ const Register = () => {
         </section>
       </div>
 
-      <div className="input-container min-w-0">
+      <div className="input-container">
         <h2 className="input-heading">{t("register.inputHeading")}</h2>
 
         <form onSubmit={handleSubmit}>
@@ -390,8 +376,6 @@ const Register = () => {
               .
             </span>
           </label>
-
-          <RegistrationTurnstile key={turnstileAttempt} onChange={setTurnstileToken} />
 
           <Button
             type="submit"
