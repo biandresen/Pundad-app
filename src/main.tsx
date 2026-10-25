@@ -10,7 +10,9 @@ import { LanguageProvider } from "./contexts/LanguageContext.tsx";
 import { ToastContainer } from "react-toastify";
 import { ModerationProvider } from "./contexts/ModerationContext.tsx";
 import { registerServiceWorker } from "./registerServiceWorker.ts";
+import { trackEditedFields } from "./lib/releaseRecovery";
 
+trackEditedFields();
 registerServiceWorker();
 
 createRoot(document.getElementById("root")!).render(

@@ -37,3 +37,39 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 30
+
+  deployment-browser:
+    name: Two-release browser regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Select paired deployment tooling
+        id: deployment
+        env:
+          CANDIDATE_REF: ${{ github.head_ref || github.ref_name }}
+        run: |
+          ref=main
+          if git check-ref-format --branch "$CANDIDATE_REF" >/dev/null 2>&1 &&
+             git ls-remote --exit-code --heads https://github.com/biandresen/Pundad-api.git "refs/heads/$CANDIDATE_REF" >/dev/null; then
+            ref="$CANDIDATE_REF"
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: biandresen/Pundad-api
+          ref: ${{ steps.deployment.outputs.ref }}
+          path: .deployment-tooling
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: sudo apt-get update && sudo apt-get install -y nginx
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:deployment
+        env:
+          PUNDAD_DEPLOY_ROOT: ${{ github.workspace }}/.deployment-tooling

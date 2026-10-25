@@ -249,3 +249,52 @@ Bugs found:
 Result:
 Pass/Fail
 ```
+
+## 14. Open Clients Across Frontend Releases
+
+Run `npm run test:deployment` with Node from `.nvmrc`, Python 3, Nginx, and
+Playwright Chromium (`npx playwright install --with-deps chromium`). The test
+uses the sibling `../../backend/pundad-api-dev` checkout by default; set
+`PUNDAD_DEPLOY_ROOT=/absolute/path/to/Pundad-api` for another layout. The backend
+checkout must contain the paired issue #199 deployment changes. CI selects the
+matching backend branch when it exists, otherwise `main`; land the paired
+backend changes before deleting that branch.
+
+The test creates two production Vite builds in a temporary directory, changes
+the dashboard layout and CSS so their hashes differ, and runs the deployment
+tooling's actual asset preparation, atomic symlink switch, and production Nginx
+template on loopback. A fixture HTTP API supplies authentication and empty data;
+the test never accesses a real database, account, deployment, or private config.
+It verifies a service-worker-controlled A tab can lazy-load A's dashboard after
+B activates, while a fresh tab gets B. It also checks CSS status/MIME and cache
+headers, missing CSS rejection without cache poisoning, bounded recovery with
+the route/query/hash intact, repeated failures across reloads, blocked session
+storage, unsaved editor preservation, NO/EN fallbacks, and offline behavior.
+
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE` can select an existing Chromium executable, and
+`NGINX_BIN` can select another Nginx binary. Browser runtime libraries must be
+available. Verification on a minimal host can extract the missing libraries
+under `/tmp` and set `LD_LIBRARY_PATH`, without installing system packages.
+
+To reproduce the original failure independently, extract the pre-fix frontend
+revision to a temporary directory, symlink its `node_modules` to this checkout's
+installed dependencies, then run
+`PUNDAD_FRONTEND_SOURCE=/tmp/pristine-frontend PUNDAD_REPRODUCE=1 npm run test:deployment`.
+This mode deliberately switches releases without asset retention and expects
+the old dashboard's hashed chunk to return 404 with a browser import error.
+
+Before a dev/staging rollout, repeat these checks in both NO and EN:
+
+- Keep a home tab open, activate a new release, and use its dashboard link.
+  Confirm the old tab loads and a fresh tab gets the new version.
+- Check HTML and `sw.js` revalidate, build/release metadata is `no-store`, hashed
+  assets are immutable, and a nonexistent JS/CSS path returns 404.
+- Keep a joke editor open with unsaved text. Force a missing lazy profile or
+  admin chunk, and confirm the text survives with a useful recovery notice.
+- Confirm a missing old chunk reloads at most once; a second failure stays on
+  the fallback. Repeat with blocked session storage and an offline connection.
+- Confirm a visited shell opens offline and reconnecting restores navigation.
+- Smoke-test login/session refresh/logout, registration/Turnstile, post creation,
+  editing and drafts, moderation, badges, leaderboards, Top Creator, streak
+  bonuses, and the points guide. These application/API flows use fixtures in the
+  deployment regression and still require a real dev/staging check.
