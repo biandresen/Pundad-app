@@ -1,30 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../contexts/AuthContext";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { safeRequest } from "../../../lib/auth";
-import { BADGE_CATALOG } from "../../../lib/badges";
+import { BADGE_CATALOG, isCurrentBadgeActive } from "../../../lib/badges";
 import { getMyBadgeHistory, getMyCurrentBadges } from "../../../lib/axios";
 import { usePagination } from "../../../hooks/usePagination";
+import { useBadgeClock } from "../../../hooks/useBadgeClock";
 
 import Spinner from "../../../components/atoms/Spinner";
 
 import type { BadgeAward, CurrentUserBadge } from "../../../types/context.types";
+import type { AppLanguage } from "../../../i18n/translations";
 
 const HISTORY_LIMIT = 15;
 
 const Badges = () => {
+  const { language } = useLanguage();
+  // A new language gets fresh pagination and cannot receive the old view's responses.
+  return <BadgeData key={language} language={language} />;
+};
+
+const BadgeData = ({ language }: { language: AppLanguage }) => {
   const { accessToken, setAccessToken } = useAuth();
   const { t } = useLanguage();
 
   const [current, setCurrent] = useState<CurrentUserBadge[]>([]);
   const [currentLoading, setCurrentLoading] = useState(true);
+  const [currentError, setCurrentError] = useState(false);
+  const historyArgs = useMemo(() => [language], [language]);
+  const now = useBadgeClock(current);
+  const activeCurrent = current.filter((badge) => isCurrentBadgeActive(badge, language, now));
 
   const {
     items: history,
     meta,
     loading: historyLoading,
+    error: historyError,
     canPrev,
     canNext,
     prev,
@@ -34,6 +47,9 @@ const Badges = () => {
     setAccessToken,
     limit: HISTORY_LIMIT,
     mode: "paged",
+    args: historyArgs,
+    resetKey: language,
+    enabled: Boolean(accessToken),
   });
 
   useEffect(() => {
@@ -49,12 +65,18 @@ const Badges = () => {
       }
 
       setCurrentLoading(true);
+      setCurrentError(false);
 
       try {
-        const res = await safeRequest(getMyCurrentBadges, accessToken, setAccessToken);
+        const res = await safeRequest(getMyCurrentBadges, accessToken, setAccessToken, language);
 
         if (isMounted) {
           setCurrent((res.data ?? []) as CurrentUserBadge[]);
+        }
+      } catch {
+        if (isMounted) {
+          setCurrent([]);
+          setCurrentError(true);
         }
       } finally {
         if (isMounted) {
@@ -68,7 +90,7 @@ const Badges = () => {
     return () => {
       isMounted = false;
     };
-  }, [accessToken, setAccessToken]);
+  }, [accessToken, setAccessToken, language]);
 
   const loading = currentLoading || historyLoading;
 
@@ -95,13 +117,15 @@ const Badges = () => {
           </p>
         </div>
 
-        {current.length === 0 ? (
+        {currentError ? (
+          <p role="alert" className="text-[var(--text1)]">{t("badges.current.failed")}</p>
+        ) : activeCurrent.length === 0 ? (
           <p className="text-[var(--text1)] opacity-70">
             {t("badges.current.empty")}
           </p>
         ) : (
           <ul className="space-y-3">
-            {current.map((b) => {
+            {activeCurrent.map((b) => {
               const badgeMeta = BADGE_CATALOG[b.badge];
 
               return (
@@ -112,7 +136,7 @@ const Badges = () => {
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-[var(--text1)]">
                       {badgeMeta?.icon ?? "🏅"}{" "}
-                      {badgeMeta?.label ?? b.badge}
+                      {t(`badges.labels.${b.badge}`, badgeMeta?.label ?? b.badge)}
                     </div>
 
                     <div className="text-sm opacity-70 text-[var(--text1)]">
@@ -152,7 +176,9 @@ const Badges = () => {
           </p>
         </div>
 
-        {history.length === 0 ? (
+        {historyError ? (
+          <p role="alert" className="text-[var(--text1)]">{t("badges.history.failed")}</p>
+        ) : history.length === 0 ? (
           <p className="text-[var(--text1)] opacity-70">
             {t("badges.history.empty")}
           </p>
@@ -170,7 +196,7 @@ const Badges = () => {
                     <div className="flex items-center justify-between">
                       <div className="font-semibold text-[var(--text1)]">
                         {badgeMeta?.icon ?? "🏅"}{" "}
-                        {badgeMeta?.label ?? a.badge}
+                        {t(`badges.labels.${a.badge}`, badgeMeta?.label ?? a.badge)}
                       </div>
 
                       <div className="text-sm opacity-70 text-[var(--text1)]">

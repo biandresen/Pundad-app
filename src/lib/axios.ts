@@ -5,6 +5,7 @@ import type { PaginatedResponse } from "../types/pagination.types";
 import type { CommentType, JokeType } from "../types/joke.types";
 import type { LeaderboardRow } from "../types/leaderboard.types";
 import type { AppLanguage } from "../i18n/translations";
+import type { DailyJokeView, StreakBonusProgress } from "../types/streak.types";
 import { languageHeaders } from "../lib/utils";
 import { normalizeApiError } from "./normalizeApiError";
 
@@ -550,18 +551,29 @@ export const getAllUserJokes = async (
   }
 };
 
-export const recordDailyJokeView = async (accessToken: token) => {
+export const recordDailyJokeView = async (accessToken: token, language: AppLanguage): Promise<ApiSuccessResponse<DailyJokeView>> => {
   try {
     const res = await axios.post(
       JOKE_API.BASE + JOKE_API.JOKES + JOKE_API.DAILY_VIEW,
       {},
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${accessToken}`, ...languageHeaders(language) },
         withCredentials: true,
       },
     );
     return res.data;
   } catch (err: any) {
+    throw normalizeApiError(err);
+  }
+};
+
+export const getDailyJokeStreak = async (accessToken: token, language: AppLanguage): Promise<ApiSuccessResponse<StreakBonusProgress>> => {
+  try {
+    const res = await axios.get(`${JOKE_API.BASE}${JOKE_API.JOKES}/daily/streak`, {
+      headers: { Authorization: `Bearer ${accessToken}`, ...languageHeaders(language) },
+    });
+    return res.data;
+  } catch (err: unknown) {
     throw normalizeApiError(err);
   }
 };

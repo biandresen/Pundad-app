@@ -12,6 +12,32 @@ dist
 dist-ssr
 *.local
 
+# Environment files (existing tracked build configuration remains tracked)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Test output and local caches
+coverage/
+.nyc_output/
+*.lcov
+*.tsbuildinfo
+.eslintcache
+.cache/
+.fallow/
+
+# Browser automation artifacts
+.playwright-cli/
+playwright-report/
+test-results/
+/output/playwright/
+
+# Local tooling and credentials
+/.agents/
+/.codex/
+/.aws/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

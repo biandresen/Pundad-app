@@ -18,6 +18,7 @@ export type BadgeKey =
   | "TRENDING_WEEK"
   | "MOST_COMMENTED_WEEK"
   | "FASTEST_GROWING"
+  | "STREAK_BONUS"
   | "STREAK";
 
 export type Badge = {
@@ -31,7 +32,9 @@ export type CurrentUserBadge = {
   id: string;
   badge: BadgeKey;
   since: string;
+  validFrom?: string | null;
   validTo?: string | null;
+  language?: AppLanguage | null;
   context?: any;
 };
 

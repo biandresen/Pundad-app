@@ -168,6 +168,9 @@ const Login = () => {
                 </li>
               ))}
             </ul>
+            <Link to="/points-and-ranking" className="mt-4 inline-block font-semibold text-[var(--text2)] underline underline-offset-4 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4">
+              {t("rankingGuide.link")} <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </section>
       </div>
