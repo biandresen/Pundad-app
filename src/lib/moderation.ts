@@ -51,6 +51,14 @@ function buildBoundaryRegex(term: string) {
   return new RegExp(`(^|\\s)${escaped}(\\s|$)`, "i");
 }
 
+function buildObfuscatedBoundaryRegex(term: string) {
+  const pattern = Array.from(term)
+    .map((character) => escapeRegex(character))
+    .join("[^\\p{L}\\p{N}]*");
+
+  return new RegExp(`(^|[^\\p{L}\\p{N}])${pattern}([^\\p{L}\\p{N}]|$)`, "iu");
+}
+
 function buildTermVariants(term: string) {
   const normalized = basicNormalize(term);
   const joined = joinedNormalize(term);
@@ -62,17 +70,14 @@ function buildTermVariants(term: string) {
 
 function buildInputVariants(input: string) {
   const basic = basicNormalize(input);
-  const joined = joinedNormalize(input);
-  const leet = joinedNormalize(applyLeetMap(input));
-  const collapsed = collapseRepeatedChars(joined);
+  const normalized = normalizeUnicode(input).toLowerCase();
+  const leet = applyLeetMap(normalized);
+  const collapsed = collapseRepeatedChars(normalized);
   const leetCollapsed = collapseRepeatedChars(leet);
 
   return {
     basic,
-    joined,
-    leet,
-    collapsed,
-    leetCollapsed,
+    obfuscated: Array.from(new Set([normalized, leet, collapsed, leetCollapsed])),
   };
 }
 
@@ -97,12 +102,8 @@ function matchesBlockedTerm(
     for (const variant of termVariants) {
       if (!variant) continue;
 
-      if (
-        variants.joined.includes(variant) ||
-        variants.leet.includes(variant) ||
-        variants.collapsed.includes(variant) ||
-        variants.leetCollapsed.includes(variant)
-      ) {
+      const regex = buildObfuscatedBoundaryRegex(joinedNormalize(variant));
+      if (variants.obfuscated.some((inputVariant) => regex.test(inputVariant))) {
         return true;
       }
     }
