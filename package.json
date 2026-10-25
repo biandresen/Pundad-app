@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node --test test/*.test.mjs",
+    "test:hero": "node --test test/home-hero.browser.mjs",
     "test:deployment": "node --test test/deployment.browser.mjs",
     "lint:prune": "eslint . --prune-suppressions"
   },
