@@ -18,6 +18,7 @@ const ResetPassword = lazy(() => import("./routes/pages/ResetPassword"));
 const VerifyEmail = lazy(() => import("./routes/pages/VerifyEmail"));
 const ResendVerification = lazy(() => import("./routes/pages/ResendVerification"));
 const About = lazy(() => import("./routes/pages/About"));
+const PointsAndRanking = lazy(() => import("./routes/pages/PointsAndRanking"));
 const Contact = lazy(() => import("./routes/pages/Contact"));
 const Terms = lazy(() => import("./routes/pages/legal/Terms"));
 const Privacy = lazy(() => import("./routes/pages/legal/Privacy"));
@@ -78,6 +79,7 @@ const App = () => {
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/resend-verification" element={<ResendVerification />} />
             <Route path="/about" element={<About />} />
+            <Route path="/points-and-ranking" element={<PointsAndRanking />} />
             <Route path="/contact" element={<Contact />} />
 
             <Route path="/legal/terms" element={<Terms />} />

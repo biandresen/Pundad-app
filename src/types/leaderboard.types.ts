@@ -5,6 +5,7 @@ export type LeaderboardRow = {
   winsByBadge: Record<string, number>;
   winsTotal: number;
   featuredScore: number;
+  streakBonusPoints: number;
   likesReceived: number;
   commentsReceived: number;
   dailyStreak: number;

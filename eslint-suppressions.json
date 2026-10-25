@@ -109,11 +109,6 @@
       "count": 4
     }
   },
-  "src/routes/pages/jokes/DailyJoke.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/routes/pages/jokes/FeaturedJokeTemplate.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1

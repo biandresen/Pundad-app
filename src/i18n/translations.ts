@@ -866,11 +866,22 @@ Page URL:
 
     badges: {
       heading: "Badges",
+      labels: {
+        ADMIN: "Admin",
+        TOP_CREATOR_MONTH: "Top Creator (Month)",
+        JOKE_OF_DAY: "Joke of the Day",
+        TRENDING_WEEK: "Trending (Week)",
+        MOST_COMMENTED_WEEK: "Most Commented (Week)",
+        FASTEST_GROWING: "Fastest Growing",
+        STREAK: "Daily Streak",
+        STREAK_BONUS: "Streak bonus",
+      },
 
       current: {
         heading: "Current",
         subheading: "Active badges",
         empty: "No active badges yet.",
+        failed: "Could not load active badges.",
         since: "Since",
       },
 
@@ -878,6 +889,7 @@ Page URL:
         heading: "History",
         subheading: "All awards (newest first)",
         empty: "No badge history yet.",
+        failed: "Could not load badge history.",
         valid: "Valid",
         from: "from",
         to: "to",
@@ -1045,6 +1057,25 @@ Page URL:
     dailyJoke: {
       heading: "👑 JOKE OF THE DAY",
       subtitle: "The joke selected for today",
+      bonus: {
+        heading: "Streak bonus",
+        loginPrompt: "Log in and visit daily to earn a point every seven consecutive days in the same language.",
+        login: "Log in",
+        loading: "Loading your progress…",
+        disabled: "Streak bonus is not available yet.",
+        scheduled: "Streak bonus starts on {{date}} (UTC). Earlier visits do not count.",
+        progress: "{{days}} consecutive days in {{language}}",
+        progressOne: "1 day in {{language}}",
+        next: "Next point after {{days}} more consecutive daily visits.",
+        nextOne: "Next point after 1 more consecutive daily visit.",
+        viewedToday: "Today's visit is counted. Come back tomorrow!",
+        notViewedToday: "Today's visit has not been counted yet.",
+        awarded: "+1 point! Your streak bonus is saved in your award history.",
+        rule: "Earn 1 point every 7 consecutive UTC days in the same language. Missing a day resets your progress; earned points stay yours.",
+        recordFailed: "We could not confirm today's visit. Your joke is still available; try again to check your progress.",
+        failed: "Could not load your streak bonus progress.",
+        retry: "Try again",
+      },
 
       actions: {
         goToAllJokes: "View all jokes",
@@ -1071,6 +1102,42 @@ Page URL:
       },
     },
 
+    rankingGuide: {
+      heading: "Points and ranking",
+      link: "How points and ranking work",
+      intro: "Earn points from awards for your jokes and daily visits to Joke of the Day. Your points determine your place on the leaderboard.",
+      awardsHeading: "Earn points with badges",
+      points: "{{points}} points",
+      bonusPoints: "1 point / 7 days",
+      awardDescriptions: {
+        TOP_CREATOR_MONTH: "Have the most published jokes created this month, each liked this month by at least two different other users. Ties go to the most such likes on qualifying jokes, then the lowest user ID. No qualifying jokes means no winner.",
+        JOKE_OF_DAY: "Your joke is selected as Joke of the Day.",
+        TRENDING_WEEK: "Your joke receives the most likes this week.",
+        FASTEST_GROWING: "Your joke receives the most likes in the scoring period.",
+        MOST_COMMENTED_WEEK: "Your joke receives the most comments this week.",
+        STREAK_BONUS: "Visit Joke of the Day in the same language on consecutive UTC days. Earn 1 point on days 7, 14, 21 and so on. Missing a day resets progress; earned points remain.",
+      },
+      example: "Example: Top Creator (5) + Joke of the Day (4) = 9 points.",
+      changingWinners: "Weekly and monthly winners can change until the period ends. Their award and points follow the current leader.",
+      fastestGrowing: "Fastest Growing updates hourly on the homepage. Hourly scoring applies until the change to one award per completed UTC day. Earlier awards keep their points.",
+      periodHeading: "Choose your language and period",
+      periods: "NO and EN have separate leaderboards. Choose this week, this month or all-time. Weeks start Monday; weeks and calendar months follow UTC (world time).",
+      awardDates: "🚀 Fastest Growing is the rocket badge; 👑 Joke of the Day is a separate award. After the change to daily scoring, Fastest Growing counts on the UTC day the likes were received. For example, an award given on 1 November for likes on 31 October counts in October. Streak bonuses count on the UTC day you reach the milestone. Other awards and older hourly awards count on the date received.",
+      history: "An expired badge stays in your history. Its award still counts when it belongs to the selected period.",
+      tiesHeading: "When points are tied",
+      tiesIntro: "We compare, in this order:",
+      ties: {
+        awards: "Most featured wins. Streak bonuses do not count as wins.",
+        likes: "Most likes received on your jokes.",
+        comments: "Most comments received on your jokes.",
+      },
+      exactTies: "Still tied? Username (ignoring case), then user ID, gives everyone a stable position.",
+      engagement: "Likes and comments count in the selected language and period. They decide ties, without adding points.",
+      streakHeading: "Profile streak and streak bonus",
+      streak: "Your profile streak is shared across languages and is just for fun: it gives no points or ranking advantage. Streak bonus progress is separate for NO and EN and starts when the bonus becomes available. Earlier visits do not count. Admin badges also give no points.",
+      leaderboardLink: "View the leaderboard",
+    },
+
     leaderboard: {
       heading: "Leaderboard",
 
@@ -1083,14 +1150,18 @@ Page URL:
       table: {
         rank: "#",
         user: "User",
-        wins: "Wins",
+        score: "Score",
+        comments: "Comments received",
+        wins: "Featured wins",
         streak: "Streak",
+        streakInfo: "Account-wide profile streak; shown for information only.",
+        streakBonusPoints: "Streak bonus points",
         likes: "Likes",
       },
 
       mobileStats: {
-        wins: "Wins",
-        streak: "Streak",
+        wins: "Featured wins",
+        streak: "Profile streak",
         likes: "Likes",
       },
 
@@ -1104,7 +1175,7 @@ Page URL:
       noJoke: "Nothing yet...",
       topCreatorMonth: {
         title: "🏆 TOP CREATOR THIS MONTH",
-        subtitle: "The creator with the most jokes this month.",
+        subtitle: "The creator with the most published jokes created this UTC month, each liked this month by at least two different other users.",
       },
       trendingWeek: {
         title: "⚡ TRENDING THIS WEEK",
@@ -2213,11 +2284,22 @@ Side-URL:
 
     badges: {
       heading: "Merker",
+      labels: {
+        ADMIN: "Admin",
+        TOP_CREATOR_MONTH: "Topp-skaper (måned)",
+        JOKE_OF_DAY: "Dagens vits",
+        TRENDING_WEEK: "Trender (uke)",
+        MOST_COMMENTED_WEEK: "Mest kommentert (uke)",
+        FASTEST_GROWING: "Raskest voksende",
+        STREAK: "Daglig streak",
+        STREAK_BONUS: "Streakbonus",
+      },
 
       current: {
         heading: "Nåværende",
         subheading: "Aktive merker",
         empty: "Ingen aktive merker ennå.",
+        failed: "Kunne ikke laste aktive merker.",
         since: "Siden",
       },
 
@@ -2225,6 +2307,7 @@ Side-URL:
         heading: "Historikk",
         subheading: "Alle utdelinger (nyeste først)",
         empty: "Ingen merkehistorikk ennå.",
+        failed: "Kunne ikke laste merkehistorikk.",
         valid: "Gyldig",
         from: "fra",
         to: "til",
@@ -2392,6 +2475,25 @@ Side-URL:
     dailyJoke: {
       heading: "👑 DAGENS VITS",
       subtitle: "Vitsen som er valgt for i dag",
+      bonus: {
+        heading: "Streakbonus",
+        loginPrompt: "Logg inn og besøk oss daglig for å få ett poeng hver sjuende dag på rad på samme språk.",
+        login: "Logg inn",
+        loading: "Laster fremgangen din…",
+        disabled: "Streakbonus er ikke tilgjengelig ennå.",
+        scheduled: "Streakbonus starter {{date}} (UTC). Tidligere besøk teller ikke.",
+        progress: "{{days}} dager på rad på {{language}}",
+        progressOne: "1 dag på {{language}}",
+        next: "Neste poeng etter {{days}} flere daglige besøk på rad.",
+        nextOne: "Neste poeng etter 1 nytt daglig besøk på rad.",
+        viewedToday: "Dagens besøk er telt. Kom tilbake i morgen!",
+        notViewedToday: "Dagens besøk er ikke telt ennå.",
+        awarded: "+1 poeng! Streakbonusen er lagret i merkehistorikken din.",
+        rule: "Få 1 poeng hver 7. UTC-dag på rad på samme språk. En dag uten besøk nullstiller fremgangen, men du beholder opptjente poeng.",
+        recordFailed: "Vi kunne ikke bekrefte dagens besøk. Vitsen er fortsatt tilgjengelig. Prøv igjen for å sjekke fremgangen din.",
+        failed: "Kunne ikke laste fremgangen for streakbonus.",
+        retry: "Prøv igjen",
+      },
 
       actions: {
         goToAllJokes: "Se alle vitser",
@@ -2418,6 +2520,42 @@ Side-URL:
       },
     },
 
+    rankingGuide: {
+      heading: "Poeng og rangering",
+      link: "Slik fungerer poeng og rangering",
+      intro: "Få poeng fra utmerkelser for vitsene dine og daglige besøk på Dagens vits. Poengene dine avgjør plasseringen på topplisten.",
+      awardsHeading: "Få poeng med merker",
+      points: "{{points}} poeng",
+      bonusPoints: "1 poeng / 7 dager",
+      awardDescriptions: {
+        TOP_CREATOR_MONTH: "Ha flest publiserte vitser opprettet denne måneden med likes fra minst to ulike andre brukere i samme måned. Ved likt antall vinner flest slike likes på de kvalifiserte vitsene, deretter laveste bruker-ID. Ingen kvalifiserte vitser gir ingen vinner.",
+        JOKE_OF_DAY: "Vitsen din blir valgt som Dagens vits.",
+        TRENDING_WEEK: "Vitsen din får flest likes denne uken.",
+        FASTEST_GROWING: "Vitsen din får flest likes i poengperioden.",
+        MOST_COMMENTED_WEEK: "Vitsen din får flest kommentarer denne uken.",
+        STREAK_BONUS: "Besøk Dagens vits på samme språk på UTC-dager på rad. Få 1 poeng på dag 7, 14, 21 og så videre. En dag uten besøk nullstiller fremgangen, men du beholder opptjente poeng.",
+      },
+      example: "Eksempel: Topp-skaper (5) + Dagens vits (4) = 9 poeng.",
+      changingWinners: "Uke- og månedsvinnerne kan endre seg frem til perioden er over. Utmerkelsen og poengene følger den som leder.",
+      fastestGrowing: "Raskest voksende oppdateres hver time på forsiden. Poeng deles ut hver time frem til overgangen til én utmerkelse per avsluttet UTC-døgn. Tidligere utmerkelser beholder poengene sine.",
+      periodHeading: "Velg språk og periode",
+      periods: "NO og EN har hver sin toppliste. Velg denne uken, denne måneden eller gjennom tidene. Uker starter mandag. Uker og kalendermåneder følger UTC (verdenstid).",
+      awardDates: "🚀 Raskest voksende er rakettmerket. 👑 Dagens vits er en egen utmerkelse. Etter overgangen til daglig poengutdeling teller Raskest voksende på UTC-døgnet da likes ble mottatt. En utmerkelse delt ut 1. november for likes mottatt 31. oktober teller for eksempel i oktober. Streakbonuser teller på UTC-døgnet du når milepælen. Andre utmerkelser og eldre timebaserte utmerkelser teller på mottaksdatoen.",
+      history: "Et utløpt merke blir værende i historikken din. Utmerkelsen teller fortsatt når den hører til den valgte perioden.",
+      tiesHeading: "Når poengsummen er lik",
+      tiesIntro: "Vi sammenligner i denne rekkefølgen:",
+      ties: {
+        awards: "Flest seire med fremhevede vitser. Streakbonuser teller ikke som seire.",
+        likes: "Flest likes mottatt på vitsene dine.",
+        comments: "Flest kommentarer mottatt på vitsene dine.",
+      },
+      exactTies: "Fortsatt likt? Brukernavn (uten hensyn til store og små bokstaver), deretter bruker-ID, gir alle en fast plassering.",
+      engagement: "Likes og kommentarer telles i valgt språk og periode. De avgjør ved poenglikhet, uten å gi ekstra poeng.",
+      streakHeading: "Profilstreak og streakbonus",
+      streak: "Profilstreaken er felles på tvers av språk og er bare for moro skyld. Den gir ingen poeng eller fordel i rangeringen. Fremgangen for streakbonus er separat for NO og EN og starter når bonusen blir tilgjengelig. Tidligere besøk teller ikke. Admin-merker gir heller ingen poeng.",
+      leaderboardLink: "Se topplisten",
+    },
+
     leaderboard: {
       heading: "Toppliste",
 
@@ -2430,14 +2568,18 @@ Side-URL:
       table: {
         rank: "#",
         user: "Bruker",
-        wins: "Seire",
+        score: "Poeng",
+        comments: "Mottatte kommentarer",
+        wins: "Vitseseire",
         streak: "Streak",
+        streakInfo: "Profilstreak på tvers av språk, kun til informasjon.",
+        streakBonusPoints: "Poeng fra streakbonus",
         likes: "Likes",
       },
 
       mobileStats: {
-        wins: "Seire",
-        streak: "Streak",
+        wins: "Vitseseire",
+        streak: "Profilstreak",
         likes: "Likes",
       },
 
@@ -2451,7 +2593,7 @@ Side-URL:
       noJoke: "Ingenting ennå...",
       topCreatorMonth: {
         title: "🏆 TOPP-SKAPER DENNE MÅNEDEN",
-        subtitle: "Skaperen med flest vitser denne måneden.",
+        subtitle: "Skaperen med flest publiserte vitser opprettet denne UTC-måneden, som hver har fått likes fra minst to ulike andre brukere i samme måned.",
       },
       trendingWeek: {
         title: "⚡ TRENDER DENNE UKEN",

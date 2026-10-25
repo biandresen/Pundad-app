@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import aboutImg from "../../assets/img/dad-in-chair.png";
 import { useLanguage } from "../../contexts/LanguageContext";
 
@@ -26,6 +27,11 @@ const About = () => {
         <p className="about-paragraph">{t("about.paragraph3")}</p>
         <p className="about-paragraph">{t("about.paragraph4")}</p>
         <p className="about-paragraph">{t("about.paragraph5")}</p>
+        <p className="about-paragraph">
+          <Link to="/points-and-ranking" className="font-semibold underline underline-offset-4 hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4">
+            {t("rankingGuide.link")} <span aria-hidden="true">→</span>
+          </Link>
+        </p>
 
         <section className="mt-10">
           <h3 className="text-[var(--text1)] text-2xl font-bold mb-4">

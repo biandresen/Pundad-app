@@ -3,6 +3,7 @@ import Avatar from "../atoms/Avatar";
 import { getStreakTier, pickPrimaryBadgeFromUser, resolveActiveBadgesFromUser } from "../../lib/badges";
 import type { User } from "../../types/context.types";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { useBadgeClock } from "../../hooks/useBadgeClock";
 
 type Props = {
   avatarUrl?: string | null;
@@ -17,10 +18,11 @@ export default function AvatarWithBadges({ user, avatarUrl, username, size, enab
   const rootRef = useRef<HTMLDivElement>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const now = useBadgeClock(user?.currentBadges);
 
-  const primary = useMemo(() => pickPrimaryBadgeFromUser(user), [user]);
-  const activeBadges = useMemo(() => resolveActiveBadgesFromUser(user), [user]);
+  const primary = useMemo(() => pickPrimaryBadgeFromUser(user, language, now), [user, language, now]);
+  const activeBadges = useMemo(() => resolveActiveBadgesFromUser(user, language, now), [user, language, now]);
 
   const streak = user?.dailyJokeStreak ?? 0;
   const bestStreak = user?.dailyJokeBestStreak ?? 0;
@@ -120,8 +122,8 @@ export default function AvatarWithBadges({ user, avatarUrl, username, size, enab
               md:text-[0.85rem]
               shadow-lg
             "
-            title={primary.label}
-            aria-label={primary.label}
+            title={t(`badges.labels.${primary.key}`, primary.label)}
+            aria-label={t(`badges.labels.${primary.key}`, primary.label)}
           >
             {primary.icon}
           </span>
@@ -170,10 +172,10 @@ export default function AvatarWithBadges({ user, avatarUrl, username, size, enab
                         bg-white/5 px-2 py-1
                         text-xs
                       "
-                      title={b.label}
+                      title={t(`badges.labels.${b.key}`, b.label)}
                     >
                       <span>{b.icon}</span>
-                      <span className="opacity-90">{b.label}</span>
+                      <span className="opacity-90">{t(`badges.labels.${b.key}`, b.label)}</span>
                     </span>
                   ))}
               </div>

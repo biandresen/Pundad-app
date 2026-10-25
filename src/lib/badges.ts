@@ -1,4 +1,5 @@
-import type { Badge, BadgeKey, User } from "../types/context.types";
+import type { Badge, BadgeKey, CurrentUserBadge, User } from "../types/context.types";
+import type { AppLanguage } from "../i18n/translations";
 
 export const BADGE_CATALOG: Record<BadgeKey, Omit<Badge, "key">> = {
   ADMIN: { label: "Admin", icon: "🛡️", priority: 0 },
@@ -8,17 +9,38 @@ export const BADGE_CATALOG: Record<BadgeKey, Omit<Badge, "key">> = {
   MOST_COMMENTED_WEEK: { label: "Most Commented (Week)", icon: "🎭", priority: 4 },
   FASTEST_GROWING: { label: "Fastest Growing", icon: "🚀", priority: 5 },
   STREAK: { label: "Daily Streak", icon: "🔥", priority: 6 },
+  STREAK_BONUS: { label: "Streak bonus", icon: "🔥", priority: 7 },
 };
 
-export function resolveActiveBadgesFromUser(user?: User | null): Badge[] {
+export function getCurrentBadgeValidity(badge: CurrentUserBadge): { from: number; to: number } {
+  const from = Date.parse(badge.validFrom ?? badge.since);
+  let to = badge.validTo == null ? Infinity : Date.parse(badge.validTo);
+  if (badge.badge === "JOKE_OF_DAY" && badge.validTo == null) {
+    // Older daily awards have no expiry metadata; they still last one UTC day.
+    const day = new Date(from);
+    day.setUTCHours(24, 0, 0, 0);
+    to = day.getTime();
+  }
+  return { from, to };
+}
+
+export function isCurrentBadgeActive(badge: CurrentUserBadge, language?: AppLanguage, now = Date.now()): boolean {
+  if (badge.badge === "STREAK_BONUS") return false;
+  if (language && badge.language && badge.language !== language) return false;
+  const { from, to } = getCurrentBadgeValidity(badge);
+  return Number.isFinite(from) && from <= now && now < to;
+}
+
+export function resolveActiveBadgesFromUser(user?: User | null, language?: AppLanguage, now = Date.now()): Badge[] {
   if (!user) return [];
 
   const keys = new Set<BadgeKey>();
 
   if (user.role === "ADMIN") keys.add("ADMIN");
 
-  // currentBadges from backend (if present)
-  (user.currentBadges ?? []).forEach((b) => keys.add(b.badge));
+  (user.currentBadges ?? []).forEach((b) => {
+    if (BADGE_CATALOG[b.badge] && isCurrentBadgeActive(b, language, now)) keys.add(b.badge);
+  });
 
   // streak badge rule (example: only >= 7)
   if ((user.dailyJokeStreak ?? 0) >= 7) keys.add("STREAK");
@@ -26,8 +48,8 @@ export function resolveActiveBadgesFromUser(user?: User | null): Badge[] {
   return Array.from(keys).map((key) => ({ key, ...BADGE_CATALOG[key] }));
 }
 
-export function pickPrimaryBadgeFromUser(user?: User | null): Badge | null {
-  const active = resolveActiveBadgesFromUser(user);
+export function pickPrimaryBadgeFromUser(user?: User | null, language?: AppLanguage, now = Date.now()): Badge | null {
+  const active = resolveActiveBadgesFromUser(user, language, now);
   if (!active.length) return null;
   return active.sort((a, b) => a.priority - b.priority)[0];
 }
