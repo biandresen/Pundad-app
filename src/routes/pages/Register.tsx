@@ -87,7 +87,7 @@ const Register = () => {
   // --------------------------------------------------
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
-  const [turnstileAttempt, setTurnstileAttempt] = useState(0);
+  const [turnstileGeneration, setTurnstileGeneration] = useState(0);
 
   // --------------------------------------------------
   // Derived state
@@ -156,9 +156,9 @@ const Register = () => {
       return;
     }
 
-        const usernameModeration = moderateFields(
+    const usernameModeration = moderateFields(
       { username: username.trim() },
-      terms
+      terms,
     );
 
     if (usernameModeration.blocked) {
@@ -172,15 +172,14 @@ const Register = () => {
       setIsSubmitting(true);
       const normalizedEmail = email.trim().toLowerCase();
 
-
-    const res = await registerUser({
-      username: username.trim(),
-      email: normalizedEmail,
-      password,
-      passwordConfirmation,
-      acceptedTerms,
-      turnstileToken,
-    });
+      const res = await registerUser({
+        username: username.trim(),
+        email: normalizedEmail,
+        password,
+        passwordConfirmation,
+        acceptedTerms,
+        turnstileToken,
+      });
 
       if (res.statusCode !== 201) {
         throw new Error(res.message || t("register.registrationFailed"));
@@ -217,7 +216,7 @@ const Register = () => {
     } finally {
       // Tokens are single-use, including when another registration check fails.
       setTurnstileToken("");
-      setTurnstileAttempt((value) => value + 1);
+      setTurnstileGeneration((value) => value + 1);
       setIsSubmitting(false);
     }
   };
@@ -255,32 +254,32 @@ const Register = () => {
             placeholder={t("register.usernamePlaceholder")}
             required
             inputValid={input1Valid}
-                onChange={(e) => {
-                const value = e.target.value;
-                setUsername(value);
+            onChange={(e) => {
+              const value = e.target.value;
+              setUsername(value);
 
-                const validationKey = usernameValidator(value);
+              const validationKey = usernameValidator(value);
 
-                if (validationKey) {
-                  setInput1Valid(false);
-                  setErrorMsg1(t(validationKey));
-                  return;
-                }
+              if (validationKey) {
+                setInput1Valid(false);
+                setErrorMsg1(t(validationKey));
+                return;
+              }
 
-                const moderation = moderateFields(
-                  { username: value.trim() },
-                  terms,
-                );
+              const moderation = moderateFields(
+                { username: value.trim() },
+                terms,
+              );
 
-                if (moderation.blocked) {
-                  setInput1Valid(false);
-                  setErrorMsg1(t("validation.blockedUsername"));
-                  return;
-                }
+              if (moderation.blocked) {
+                setInput1Valid(false);
+                setErrorMsg1(t("validation.blockedUsername"));
+                return;
+              }
 
-                setInput1Valid(true);
-                setErrorMsg1("");
-              }}
+              setInput1Valid(true);
+              setErrorMsg1("");
+            }}
           />
 
           <Input
@@ -391,7 +390,7 @@ const Register = () => {
             </span>
           </label>
 
-          <RegistrationTurnstile key={turnstileAttempt} onChange={setTurnstileToken} />
+          <RegistrationTurnstile key={turnstileGeneration} onChange={setTurnstileToken} />
 
           <Button
             type="submit"

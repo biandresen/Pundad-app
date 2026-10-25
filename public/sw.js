@@ -22,23 +22,17 @@ self.addEventListener("activate", (event) => {
 
         await Promise.all(oldPundadCaches.map((cacheName) => caches.delete(cacheName)));
         await self.clients.claim();
-
-        if (oldPundadCaches.length === 0) {
-          return;
-        }
-
-        const clients = await self.clients.matchAll({ type: "window" });
-        await Promise.allSettled(
-          clients
-            .filter(isRegistrationClient)
-            .map((client) => client.navigate(client.url)),
-        );
       }),
   );
 });
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
+
+  if (isRegistrationRequest(request)) {
+    event.respondWith(handleRegistrationRequest(event));
+    return;
+  }
 
   if (request.method !== "GET") {
     return;
@@ -90,11 +84,38 @@ function isStaticAsset(request) {
   return ["style", "script", "worker", "font", "image", "manifest"].includes(request.destination);
 }
 
-function isRegistrationClient(client) {
+function isRegistrationRequest(request) {
+  const requestUrl = new URL(request.url);
+  return request.method === "POST" &&
+    requestUrl.origin === self.location.origin &&
+    requestUrl.pathname === "/api/v1/auth/register";
+}
+
+async function handleRegistrationRequest(event) {
+  const { request } = event;
+  let payload;
+
   try {
-    const clientUrl = new URL(client.url);
-    return clientUrl.origin === self.location.origin && /^\/register\/?$/.test(clientUrl.pathname);
+    payload = await request.clone().json();
   } catch {
-    return false;
+    return fetch(request);
   }
+
+  if (typeof payload?.turnstileToken === "string" && payload.turnstileToken.trim()) {
+    return fetch(request);
+  }
+
+  try {
+    const client = event.clientId ? await self.clients.get(event.clientId) : null;
+    await client?.navigate(client.url);
+  } catch {}
+
+  return new Response(JSON.stringify({
+    success: false,
+    message: "The application was updated. Please try registering again.",
+    code: "CLIENT_UPDATE_REQUIRED",
+  }), {
+    status: 409,
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+  });
 }

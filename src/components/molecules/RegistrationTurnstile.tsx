@@ -7,8 +7,8 @@ const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim();
 
 export default function RegistrationTurnstile({ onChange }: { onChange: (token: string) => void }) {
   const { language, t } = useLanguage();
-  const [failed, setFailed] = useState(false);
-  const [attempt, setAttempt] = useState(0);
+  const [widgetFailed, setWidgetFailed] = useState(false);
+  const [retryGeneration, setRetryGeneration] = useState(0);
   const [widgetSize, setWidgetSize] = useState<"compact" | "flexible">("compact");
   const container = useRef<HTMLDivElement>(null);
   const loadTimer = useRef<number | undefined>(undefined);
@@ -29,26 +29,26 @@ export default function RegistrationTurnstile({ onChange }: { onChange: (token: 
     // Also handle blocked or stalled script loads, which cannot emit widget callbacks.
     loadTimer.current = window.setTimeout(() => {
       onChange("");
-      setFailed(true);
+      setWidgetFailed(true);
     }, 15_000);
 
     return () => {
       window.clearTimeout(loadTimer.current);
       onChange("");
     };
-  }, [attempt, language, onChange, widgetSize]);
+  }, [retryGeneration, language, onChange, widgetSize]);
 
-  const fail = () => {
+  const handleWidgetFailure = () => {
     window.clearTimeout(loadTimer.current);
     onChange("");
-    setFailed(true);
+    setWidgetFailed(true);
   };
 
   return (
     <div ref={container} className="mt-5 min-w-0 w-full" aria-label={t("register.securityCheck")}>
       {siteKey && (
         <Turnstile
-          key={`${language}:${attempt}:${widgetSize}`}
+          key={`${language}:${retryGeneration}:${widgetSize}`}
           siteKey={siteKey}
           options={{
             action: "register",
@@ -59,26 +59,26 @@ export default function RegistrationTurnstile({ onChange }: { onChange: (token: 
           }}
           onWidgetLoad={() => window.clearTimeout(loadTimer.current)}
           onSuccess={(token) => {
-            setFailed(false);
+            setWidgetFailed(false);
             onChange(token);
           }}
           onExpire={() => onChange("")}
-          onError={fail}
-          onTimeout={fail}
-          onUnsupported={fail}
+          onError={handleWidgetFailure}
+          onTimeout={handleWidgetFailure}
+          onUnsupported={handleWidgetFailure}
         />
       )}
-      {(!siteKey || failed) && (
+      {(!siteKey || widgetFailed) && (
         <div role="alert" className="text-sm text-[var(--error)]">
           <p>{t("register.securityUnavailable")}</p>
           {siteKey && (
             <Button type="button" className="mt-2" label={t("register.retrySecurity")}
               onClick={() => {
                 onChange("");
-                setFailed(false);
+                setWidgetFailed(false);
                 // Let the library inject the script again after a failed load.
                 if (!window.turnstile) document.getElementById(DEFAULT_SCRIPT_ID)?.remove();
-                setAttempt((value) => value + 1);
+                setRetryGeneration((value) => value + 1);
               }}>
               {t("register.retrySecurity")}
             </Button>
