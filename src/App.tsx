@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, useState, Suspense } from "react";
+import { importWithRecovery } from "./lib/releaseRecovery";
+import ReleaseRecoveryNotice from "./components/molecules/ReleaseRecoveryNotice";
+import RouteErrorBoundary from "./components/molecules/RouteErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import { useColorTheme } from "./contexts/ColorThemeContext";
 import { useAuth } from "./contexts/AuthContext";
@@ -9,42 +12,42 @@ import Spinner from "./components/atoms/Spinner";
 import Layout from "./routes/layouts/Layout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
-const NotFound = lazy(() => import("./routes/pages/NotFound"));
-const Home = lazy(() => import("./routes/pages/Home"));
-const Login = lazy(() => import("./routes/pages/Login"));
-const Register = lazy(() => import("./routes/pages/Register"));
-const ForgotPassword = lazy(() => import("./routes/pages/ForgotPassord"));
-const ResetPassword = lazy(() => import("./routes/pages/ResetPassword"));
-const VerifyEmail = lazy(() => import("./routes/pages/VerifyEmail"));
-const ResendVerification = lazy(() => import("./routes/pages/ResendVerification"));
-const About = lazy(() => import("./routes/pages/About"));
-const PointsAndRanking = lazy(() => import("./routes/pages/PointsAndRanking"));
-const Contact = lazy(() => import("./routes/pages/Contact"));
-const Terms = lazy(() => import("./routes/pages/legal/Terms"));
-const Privacy = lazy(() => import("./routes/pages/legal/Privacy"));
-const Cookies = lazy(() => import("./routes/pages/legal/Cookies"));
-const CommunityRules = lazy(() => import("./routes/pages/legal/CommunityRules"));
+const NotFound = lazy(() => importWithRecovery(() => import("./routes/pages/NotFound")));
+const Home = lazy(() => importWithRecovery(() => import("./routes/pages/Home")));
+const Login = lazy(() => importWithRecovery(() => import("./routes/pages/Login")));
+const Register = lazy(() => importWithRecovery(() => import("./routes/pages/Register")));
+const ForgotPassword = lazy(() => importWithRecovery(() => import("./routes/pages/ForgotPassord")));
+const ResetPassword = lazy(() => importWithRecovery(() => import("./routes/pages/ResetPassword")));
+const VerifyEmail = lazy(() => importWithRecovery(() => import("./routes/pages/VerifyEmail")));
+const ResendVerification = lazy(() => importWithRecovery(() => import("./routes/pages/ResendVerification")));
+const About = lazy(() => importWithRecovery(() => import("./routes/pages/About")));
+const PointsAndRanking = lazy(() => importWithRecovery(() => import("./routes/pages/PointsAndRanking")));
+const Contact = lazy(() => importWithRecovery(() => import("./routes/pages/Contact")));
+const Terms = lazy(() => importWithRecovery(() => import("./routes/pages/legal/Terms")));
+const Privacy = lazy(() => importWithRecovery(() => import("./routes/pages/legal/Privacy")));
+const Cookies = lazy(() => importWithRecovery(() => import("./routes/pages/legal/Cookies")));
+const CommunityRules = lazy(() => importWithRecovery(() => import("./routes/pages/legal/CommunityRules")));
 
-const DashboardLayout = lazy(() => import("./routes/layouts/DashboardLayout"));
-const NewJoke = lazy(() => import("./routes/pages/dashboard/NewJoke"));
-const Drafts = lazy(() => import("./routes/pages/dashboard/Drafts"));
-const Profile = lazy(() => import("./routes/pages/dashboard/Profile"));
-const Admin = lazy(() => import("./routes/pages/dashboard/Admin"));
-const Badges = lazy(() => import("./routes/pages/dashboard/Badges"));
+const DashboardLayout = lazy(() => importWithRecovery(() => import("./routes/layouts/DashboardLayout")));
+const NewJoke = lazy(() => importWithRecovery(() => import("./routes/pages/dashboard/NewJoke")));
+const Drafts = lazy(() => importWithRecovery(() => import("./routes/pages/dashboard/Drafts")));
+const Profile = lazy(() => importWithRecovery(() => import("./routes/pages/dashboard/Profile")));
+const Admin = lazy(() => importWithRecovery(() => import("./routes/pages/dashboard/Admin")));
+const Badges = lazy(() => importWithRecovery(() => import("./routes/pages/dashboard/Badges")));
 
-const JokesLayout = lazy(() => import("./routes/layouts/JokesLayout"));
-const AllJokes = lazy(() => import("./routes/pages/jokes/AllJokes"));
-const MyJokes = lazy(() => import("./routes/pages/jokes/MyJokes"));
-const Popular = lazy(() => import("./routes/pages/jokes/Popular"));
-const Search = lazy(() => import("./routes/pages/jokes/Search"));
-const SingleJoke = lazy(() => import("./routes/pages/jokes/SingleJoke"));
-const RandomJoke = lazy(() => import("./routes/pages/jokes/RandomJoke"));
-const DailyJoke = lazy(() => import("./routes/pages/jokes/DailyJoke"));
-const TrendingWeek = lazy(() => import("./routes/pages/jokes/TrendingWeek"));
-const MostCommentedWeek = lazy(() => import("./routes/pages/jokes/MostCommentedWeek"));
-const FastestGrowing = lazy(() => import("./routes/pages/jokes/FastestGrowing"));
-const TopCreatorMonth = lazy(() => import("./routes/pages/jokes/TopCreatorMonth"));
-const Leaderboard = lazy(() => import("./routes/pages/jokes/Leaderboard"));
+const JokesLayout = lazy(() => importWithRecovery(() => import("./routes/layouts/JokesLayout")));
+const AllJokes = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/AllJokes")));
+const MyJokes = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/MyJokes")));
+const Popular = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/Popular")));
+const Search = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/Search")));
+const SingleJoke = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/SingleJoke")));
+const RandomJoke = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/RandomJoke")));
+const DailyJoke = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/DailyJoke")));
+const TrendingWeek = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/TrendingWeek")));
+const MostCommentedWeek = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/MostCommentedWeek")));
+const FastestGrowing = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/FastestGrowing")));
+const TopCreatorMonth = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/TopCreatorMonth")));
+const Leaderboard = lazy(() => importWithRecovery(() => import("./routes/pages/jokes/Leaderboard")));
 
 const App = () => {
   useAuthInitializer();
@@ -68,7 +71,8 @@ const App = () => {
   return (
     <BrowserRouter>
       <Layout setSidebars={setSidebars}>
-        <Suspense fallback={<Spinner />}>
+        <RouteErrorBoundary>
+        <Suspense fallback={<><Spinner /><ReleaseRecoveryNotice /></>}>
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
@@ -125,6 +129,7 @@ const App = () => {
           </Routes>
           <ToastContainer position="bottom-right" theme={colorTheme} />
         </Suspense>
+        </RouteErrorBoundary>
       </Layout>
     </BrowserRouter>
   );

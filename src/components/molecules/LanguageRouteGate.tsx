@@ -60,7 +60,9 @@ const LanguageRouteGate = ({ children }: LanguageRouteGateProps) => {
     location.hash,
   ]);
 
-  if (shouldAddQueryLanguage || shouldSyncLanguage) {
+  // Adding the current language does not change rendered content. Keep editors
+  // mounted while replacing the URL so lazy-route recovery can protect edits.
+  if (shouldSyncLanguage) {
     return null;
   }
 

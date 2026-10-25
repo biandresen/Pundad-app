@@ -2,6 +2,15 @@ export type AppLanguage = "EN" | "NO";
 
 export const translations = {
   EN: {
+    releaseRecovery: {
+      failed: "This page could not be loaded.",
+      unsaved: "Your edits are still open. Go back and save them before reloading.",
+      offline: "You are offline. Reconnect and try again.",
+      retryHint: "Check your connection and try again, or reload to get the latest version.",
+      retry: "Try again",
+      back: "Go back",
+      reload: "Reload page",
+    },
     moderationAdmin: {
       heading: "Moderation",
       fields: {
@@ -1420,6 +1429,15 @@ Page URL:
   },
 
   NO: {
+    releaseRecovery: {
+      failed: "Siden kunne ikke lastes.",
+      unsaved: "Endringene dine er fortsatt åpne. Gå tilbake og lagre dem før du laster inn på nytt.",
+      offline: "Du er frakoblet. Koble til nettet og prøv igjen.",
+      retryHint: "Sjekk nettforbindelsen og prøv igjen, eller last inn den nyeste versjonen.",
+      retry: "Prøv igjen",
+      back: "Gå tilbake",
+      reload: "Last inn på nytt",
+    },
     moderationAdmin: {
       heading: "Moderering",
       fields: {
