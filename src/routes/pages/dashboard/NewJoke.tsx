@@ -186,7 +186,7 @@ const NewJoke = () => {
 
         <div className="relative">
           <textarea
-            className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2 min-h-12 outline-none placeholder:text-[0.7rem]
+            className="md:text-2xl rounded-2xl bg-[var(--bg)] w-full text-[var(--text1)] px-3 font-normal md:h-50 py-2 min-h-12 outline-none placeholder:text-[0.9rem]
             md:placeholder:text-[1rem]"
             title={t("newJoke.fields.body")}
             value={body}

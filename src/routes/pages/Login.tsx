@@ -246,7 +246,7 @@ const Login = () => {
                   required
                   className={`bg-[var(--bg)] text-[var(--text1)] font-semibold rounded-full w-full text-lg md:text-xl px-3 py-0.5 pr-13
                     outline-none border
-                    placeholder:text-[0.7rem]
+                    placeholder:text-[0.9rem]
                     md:placeholder:text-[1rem]
                     ${input2Valid === false && password?.trim().length ? "border-[var(--error)]" : "border-transparent"}`}
                 />
