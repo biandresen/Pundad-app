@@ -486,6 +486,7 @@ const Profile = () => {
                 <div className="flex flex-col relative">
                   <Input
                     id="currentPassword"
+                    className="text-[var(--text1)] max-md:placeholder-shown:pr-2"
                     type={showCurrentPassword ? "text" : "password"}
                     label={t("profile.fields.currentPassword")}
                     value={currentPassword}
