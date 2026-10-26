@@ -28,6 +28,7 @@ import AvatarWithBadges from "../atoms/AvatarWithBadges";
 import { NavLink } from "react-router-dom";
 import Modal from "../molecules/Modal";
 import { MAX_CHARS } from "../../lib/constants";
+import { getPostBodyError, getPostBodyApiError, type PostBodyError, normalizePostBody } from "../../lib/postBody";
 import TagsCard from "../molecules/TagsCard";
 import type { User } from "../../types/context.types";
 import { usePagination } from "../../hooks/usePagination";
@@ -51,8 +52,11 @@ const Joke = ({
   // const [comments, setComments] = useState(joke.comments);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(joke.title);
+  const [serverBodyError, setServerBodyError] = useState<PostBodyError | "invalid" | null>(null);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const [editedBody, setEditedBody] = useState(joke.body);
   const [editedTags, setEditedTags] = useState(joke.tags.map((tag) => tag.name).join(", "));
+  const bodyError = getPostBodyError(editedBody) ?? serverBodyError;
   const [published, setPublished] = useState(joke.published);
   const [hasLiked, setHasLiked] = useState(false);
   const [likedList, setLikedList] = useState<string[]>([]);
@@ -111,15 +115,32 @@ const Joke = ({
   const buttonText = commentsIsOpen ? t("joke.actions.closeComments") : t("joke.actions.openComments");
 
   const BODY_PREVIEW_LIMIT = 600;
-  const bodyIsLong = joke.body.length > BODY_PREVIEW_LIMIT;
+  // No prior line limit existed. Six lines keeps feed cards readable on mobile.
+  const BODY_PREVIEW_LINES = 6;
+  const previewRef = useRef<HTMLParagraphElement>(null);
+  const [previewOverflows, setPreviewOverflows] = useState(false);
+  const normalizedBody = normalizePostBody(joke.body);
+  const bodyIsLong = normalizedBody.length > BODY_PREVIEW_LIMIT ||
+    normalizedBody.split("\n").length > BODY_PREVIEW_LINES || previewOverflows;
 
   const displayedBody =
-    bodyIsLong && !isBodyExpanded ? joke.body.slice(0, BODY_PREVIEW_LIMIT) + "..." : joke.body;
+    !isBodyExpanded && normalizedBody.length > BODY_PREVIEW_LIMIT
+      ? normalizedBody.slice(0, BODY_PREVIEW_LIMIT) + "..." : normalizedBody;
+
+  useEffect(() => {
+    const element = previewRef.current;
+    if (!element || isBodyExpanded) return;
+    const measure = () => setPreviewOverflows(element.scrollHeight > element.clientHeight + 1);
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    measure();
+    return () => observer.disconnect();
+  }, [displayedBody, isBodyExpanded, isEditing]);
 
   useEffect(() => {
     // reset when joke changes
     setIsBodyExpanded(false);
-  }, [joke.id]);
+  }, [joke.id, joke.body]);
 
   useEffect(() => {
     if (!joke) return;
@@ -148,15 +169,6 @@ const Joke = ({
     ),
   );
 
-  const handleBodyEnter = useSubmitOnEnter(() =>
-    handleEditJoke(
-      joke.id,
-      editedTitle,
-      editedBody,
-      editedTags.split(",").map((t) => t.trim()),
-    ),
-  );
-
   const handleTagsEnter = useSubmitOnEnter(() =>
     handleEditJoke(
       joke.id,
@@ -167,6 +179,7 @@ const Joke = ({
   );
 
   const handleEditInput = () => {
+    setServerBodyError(null);
     setCommentsIsOpen(false);
     setIsEditing((prev) => !prev);
     setEditedBody(joke.body);
@@ -236,9 +249,9 @@ const Joke = ({
   };
 
   const handleEditJoke = async (jokeId: number, newTitle: string, newBody: string, editedTags: string[]) => {
+    if (!accessToken || getPostBodyError(newBody) || serverBodyError || isSavingEdit) return;
+    setIsSavingEdit(true);
     try {
-      if (!accessToken) return;
-
       const moderation = moderateFields(
         {
           title: newTitle,
@@ -259,7 +272,7 @@ const Joke = ({
         setAccessToken,
         jokeId,
         newTitle,
-        newBody,
+        normalizePostBody(newBody),
         published,
         editedTags,
         language,
@@ -285,6 +298,11 @@ const Joke = ({
         }`,
       );
     } catch (err: any) {
+      const fieldError = getPostBodyApiError(err);
+      if (fieldError) {
+        setServerBodyError(fieldError);
+        return;
+      }
       const backendFieldErrors = err?.response?.data?.errors;
       const blockedContentError =
         Array.isArray(backendFieldErrors) ?
@@ -296,6 +314,8 @@ const Joke = ({
 
       toast.error(message);
       console.error("Failed to edit joke", err?.response?.data || err?.message);
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -539,18 +559,26 @@ const Joke = ({
             aria-label={t("joke.aria.editJokeBody")}
             title={t("joke.aria.editJokeBody")}
             value={editedBody}
-            maxLength={MAX_CHARS.BODY}
-            onKeyDown={handleBodyEnter}
+            aria-invalid={Boolean(bodyError)}
+            aria-describedby={bodyError ? `joke-body-error-${joke.id}` : undefined}
             onChange={(e) => {
-              if (e.target.value.length <= MAX_CHARS.BODY) setEditedBody(e.target.value);
+              setServerBodyError(null);
+              setEditedBody(e.target.value);
               handleInput();
             }}
             className="text-sm md:text-lg p-5 resize-none w-full overflow-hidden outline-none"
           />
-          <span className="characters-left">{getCharactersLeft(editedBody, MAX_CHARS.BODY)}</span>
+          <span className="characters-left" aria-label={t("validation.postBody.counter")}>{getCharactersLeft(normalizePostBody(editedBody), MAX_CHARS.BODY)}</span>
         </div>
       : <div className="px-5 xl:px-10 pb-4 pt-1">
-          <p className="text-sm md:text-lg/7 xl:text-lg whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word]">
+          <p
+            ref={previewRef}
+            style={!isBodyExpanded ? {
+              display: "-webkit-box", WebkitBoxOrient: "vertical",
+              WebkitLineClamp: BODY_PREVIEW_LINES, overflow: "hidden",
+            } : undefined}
+            className="text-sm md:text-lg/7 xl:text-lg whitespace-pre-wrap [overflow-wrap:anywhere] [word-break:break-word]"
+          >
             {displayedBody}
           </p>
           {/* If I want to add links */}
@@ -571,6 +599,7 @@ const Joke = ({
           )}
         </div>
       }
+      {isEditing && bodyError && <p id={`joke-body-error-${joke.id}`} role="alert" className="mx-5 xl:mx-10 text-sm text-[var(--error)] mb-4">{t(`validation.postBody.${bodyError}`)}</p>}
       <hr className="text-[var(--text1)] opacity-10" />
       <div className="flex flex-col gap-3 xl:flex-row justify-between px-5 xl:px-10 py-4">
         {isEditing ?
@@ -611,6 +640,7 @@ const Joke = ({
         {isEditing ?
           <button
             type="button"
+            disabled={Boolean(bodyError) || isSavingEdit}
             aria-label={t("joke.aria.editMessage")}
             title={t("joke.aria.editMessage")}
             className="absolute bottom-2 right-2 p-2 rounded-full hover:bg-[var(--bg)] text-[var(--button3)]"

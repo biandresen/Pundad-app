@@ -120,6 +120,15 @@ export const translations = {
     },
 
     validation: {
+      postBody: {
+        required: "Body cannot be empty.",
+        characters: "Body can have at most 10,000 characters.",
+        lines: "Body can have at most 50 lines, including empty lines.",
+        newlines: "Body cannot contain three consecutive newlines. Use at most one blank line between paragraphs.",
+        invalid: "Body is invalid. Check the character, line and blank-line limits.",
+        counter: "Characters",
+      },
+
       username: {
         length: "Username must be between 3 and 16 characters",
       },
@@ -1547,6 +1556,15 @@ Page URL:
     },
 
     validation: {
+      postBody: {
+        required: "Teksten kan ikke være tom.",
+        characters: "Teksten kan ha høyst 10 000 tegn.",
+        lines: "Teksten kan ha høyst 50 linjer, inkludert tomme linjer.",
+        newlines: "Teksten kan ikke inneholde tre linjeskift på rad. Bruk høyst én tom linje mellom avsnitt.",
+        invalid: "Teksten er ugyldig. Sjekk grensene for tegn, linjer og tomme linjer.",
+        counter: "Tegn",
+      },
+
       username: {
         length: "Brukernavn må være mellom 3 og 16 tegn",
       },

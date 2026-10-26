@@ -8,6 +8,7 @@ import Input from "../../../components/atoms/Input";
 import { publishJoke, saveDraft } from "../../../lib/axios";
 import { safeRequest } from "../../../lib/auth";
 import { getCharactersLeft, setInputErrors } from "../../../lib/utils";
+import { getPostBodyError, getPostBodyApiError, normalizePostBody, type PostBodyError } from "../../../lib/postBody";
 import { MAX_CHARS } from "../../../lib/constants";
 
 import { useAuth } from "../../../contexts/AuthContext";
@@ -20,6 +21,7 @@ import { useUnsavedChangesWarning } from "../../../hooks/useUnsavedChangesWarnin
 import { moderateFields } from "../../../lib/moderation";
 
 const NewJoke = () => {
+  const [serverBodyError, setServerBodyError] = useState<PostBodyError | "invalid" | null>(null);
   const [jokeErrors, setJokeErrors] = useState<string[]>([]);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -43,7 +45,8 @@ const NewJoke = () => {
 
   const { title, body, tags } = state;
 
-  const invalidForm = !title.trim() && !body.trim();
+  const bodyError = (body ? getPostBodyError(body) : null) ?? serverBodyError;
+  const invalidForm = !title.trim() || !body.trim() || Boolean(bodyError);
 
   const parsedTags = useMemo(
     () =>
@@ -104,7 +107,7 @@ const NewJoke = () => {
         accessToken,
         setAccessToken,
         title.trim(),
-        body.trim(),
+        normalizePostBody(body),
         parsedTags,
         language,
       );
@@ -125,7 +128,10 @@ const NewJoke = () => {
       }
 
       console.error(errorLabel, err);
-      setJokeErrors(setInputErrors(err?.response?.data?.errors));
+      const fieldError = getPostBodyApiError(err);
+      setServerBodyError(fieldError);
+      const otherErrors = err?.response?.data?.errors?.filter((error: { field?: string }) => error.field !== "body");
+      setJokeErrors(fieldError && !otherErrors?.length ? [] : setInputErrors(otherErrors));
     } finally {
       setLoading(false);
     }
@@ -191,17 +197,19 @@ const NewJoke = () => {
             title={t("newJoke.fields.body")}
             value={body}
             onChange={(e) => {
-              if (e.target.value.length <= MAX_CHARS.BODY) {
-                setState((prev) => ({ ...prev, body: e.target.value }));
-              }
+              setServerBodyError(null);
+              setState((prev) => ({ ...prev, body: e.target.value }));
             }}
             placeholder={t("newJoke.placeholders.body")}
             id="body"
-            maxLength={MAX_CHARS.BODY}
+            aria-invalid={Boolean(bodyError)}
+            aria-describedby={bodyError ? "new-joke-body-error" : undefined}
             required
           />
-          <span className="characters-left bottom-2!">{getCharactersLeft(body, MAX_CHARS.BODY)}</span>
+          <span className="characters-left bottom-2!" aria-label={t("validation.postBody.counter")}>{getCharactersLeft(normalizePostBody(body), MAX_CHARS.BODY)}</span>
         </div>
+
+        {bodyError && <p id="new-joke-body-error" role="alert" className="text-sm text-[var(--error)] my-2">{t(`validation.postBody.${bodyError}`)}</p>}
 
         <div className="relative">
           <Input
